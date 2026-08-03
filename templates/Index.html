@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Sales Recorder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>🛒 Daily Sales Recorder</h1>
+        <p class="subtitle">Record and track today's sales quickly and easily.</p>
+
+        <!-- Sale entry form -->
+        <div class="card">
+            <h2>Add a Sale</h2>
+            <form action="{{ url_for('add_sale') }}" method="POST" class="sale-form">
+                <div class="form-group">
+                    <label for="product">Product Name</label>
+                    <input type="text" id="product" name="product" placeholder="e.g. Bread" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantity Sold</label>
+                    <input type="number" id="quantity" name="quantity" min="1" placeholder="e.g. 3" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Selling Price (per unit)</label>
+                    <input type="number" id="price" name="price" min="0" step="0.01" placeholder="e.g. 5.50" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Add Sale</button>
+            </form>
+        </div>
+
+        <!-- Sales table -->
+        <div class="card">
+            <h2>Today's Sales ({{ record_count }})</h2>
+
+            {% if sales|length == 0 %}
+                <p class="empty-state">No sales recorded yet. Use the form above to add one.</p>
+            {% else %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sale in sales %}
+                        <tr>
+                            <td>{{ sale.id }}</td>
+                            <td>{{ sale.product }}</td>
+                            <td>{{ sale.quantity }}</td>
+                            <td>GHS {{ "%.2f"|format(sale.price) }}</td>
+                            <td>GHS {{ "%.2f"|format(sale.total) }}</td>
+                            <td>
+                                <form action="{{ url_for('delete_sale', sale_id=sale.id) }}" method="POST">
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="grand-total">
+                    Grand Total: <span>GHS {{ "%.2f"|format(grand_total) }}
