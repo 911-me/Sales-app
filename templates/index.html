@@ -8,10 +8,9 @@
 <body>
 
     <div class="container">
-        <h1>🛒 Daily Sales Recorder</h1>
+        <h1>Daily Sales Recorder</h1>
         <p class="subtitle">Record and track today's sales quickly and easily.</p>
 
-        <!-- Sale entry form -->
         <div class="card">
             <h2>Add a Sale</h2>
             <form action="{{ url_for('add_sale') }}" method="POST" class="sale-form">
@@ -34,7 +33,6 @@
             </form>
         </div>
 
-        <!-- Sales table -->
         <div class="card">
             <h2>Today's Sales ({{ record_count }})</h2>
 
@@ -71,4 +69,15 @@
                 </table>
 
                 <div class="grand-total">
-                    Grand Total: <span>GHS {{ "%.2f"|format(grand_total) }}
+                    Grand Total: <span>GHS {{ "%.2f"|format(grand_total) }}</span>
+                </div>
+
+                <form action="{{ url_for('clear_sales') }}" method="POST" onsubmit="return confirm('Clear all sales records?');">
+                    <button type="submit" class="btn-secondary">Clear All Records</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>
